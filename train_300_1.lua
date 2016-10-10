@@ -378,7 +378,7 @@ function train(trainTarget, trainName)
     end       
   end-- t :training all samples
   -- when train with all samples and then save model
-  local filename = paths.concat(model_dir, '300x300_1_' .. tostring(tot_iter) .. 'model.net')
+  local filename = paths.concat(model_dir, '300x300_1_' .. 'model.net')
   os.execute('mkdir -p ' .. sys.dirname(filename))
   print('==> saving model to '..filename)
   model:clearState()
