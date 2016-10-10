@@ -386,7 +386,7 @@ function train(trainTarget, trainName)
   model:clearState()
   torch.save(filename, model)
     
-  fp_err = io.open(resultDir .. "loss.txt","a")
+  fp_err = io.open(resultDir .. "_loss.txt","a")
   local err = tot_error/cnt_error
   fp_err:write(err,"\n")
   fp_err:close()
