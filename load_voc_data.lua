@@ -45,3 +45,6 @@ trainTarget = torch.load(trainTarget_path)
 trainName = torch.load(trainName_path)
 print("training data label:"..#trainTarget)
 print("training data names:"..#trainName)
+
+print(trainName)
+print(trainName[1])
