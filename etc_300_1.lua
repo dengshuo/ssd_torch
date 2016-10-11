@@ -5,9 +5,6 @@ result_dir = "./result/"
 model_dir = result_dir .. "model/"
 fig_dir = result_dir .. "fig/"
 
-mode = "train"
---mode = "test"
-
 -- whether training model from scratch
 continue = false
 continue_iter = 0
