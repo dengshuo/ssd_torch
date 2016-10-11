@@ -372,24 +372,28 @@ function train(trainTarget, trainName)
     tot_iter = tot_iter + 1
 
     if tot_iter % 100 == 0 then
-      print("iteration: " .. tot_iter .. "/" .. iterLimit .. " batch: " ..  t .. "/" .. trainSz .. " loss: " .. tot_error/cnt_error .. " classErr: " .. tot_cls_err/cnt_error .. " locErr: " .. tot_loc_err/cnt_error)
+      print("iteration: " .. tot_iter .. "/" .. iterLimit .. " batch: " ..  t .. "/" .. trainSz .. " loss: " .. tot_error/cnt_error .. " classErr: " .. tot_cls_err/cnt_error .. " locErr: " .. tot_loc_err/cnt_error)     
     end
 
+    if tot_iter % 1000 == 0 then
+      -- when train with all samples and then save model
+      local filename = paths.concat(model_dir, '300x300_2_' .. tot_iter .. 'model.net')
+      os.execute('mkdir -p ' .. sys.dirname(filename))
+      print('==> saving model to '..filename)
+      model:clearState()
+      torch.save(filename, model)
+    
+      fp_err = io.open(resultDir .. "_loss.txt","a")
+      local err = tot_error/cnt_error
+      fp_err:write(err,"\n")
+      fp_err:close()    
+    end
+    
     if tot_iter == iterLrDecay then
       optimState.learningRate = optimState.learningRate/10
-    end       
+    end    
+       
   end-- t :training all samples
-  -- when train with all samples and then save model
-  local filename = paths.concat(model_dir, '300x300_2_' .. 'model.net')
-  os.execute('mkdir -p ' .. sys.dirname(filename))
-  print('==> saving model to '..filename)
-  model:clearState()
-  torch.save(filename, model)
-    
-  fp_err = io.open(resultDir .. "_loss.txt","a")
-  local err = tot_error/cnt_error
-  fp_err:write(err,"\n")
-  fp_err:close()
 end
 
 
