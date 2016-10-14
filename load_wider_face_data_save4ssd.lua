@@ -16,14 +16,14 @@ function load_data_save4ssd(mode)
   end
     
   if mode == "train" then  
-    file_path = "/home/gavinpan/workspace/dataset/wider_face/wider_face_train.txt"
-    len       = 158988
+    file_path = "/home/gavinpan/workspace/dataset/wider_face/wider_face_train_0.txt"
+    len       = 158988 - 19
     file_dir  = "/home/gavinpan/workspace/dataset/wider_face/WIDER_train/images/"   
   end
   
   if mode == "val" then  
-    file_path = "/home/gavinpan/workspace/dataset/wider_face/wider_face_val.txt"
-    len       = 39454
+    file_path = "/home/gavinpan/workspace/dataset/wider_face/wider_face_val_0.txt"
+    len       = 39454 - 9
     file_dir  = "/home/gavinpan/workspace/dataset/wider_face/WIDER_val/images/"   
   end   
    
@@ -82,19 +82,19 @@ function load_data_save4ssd(mode)
       --print(string.sub(img_name,1,-5))
       table.insert(name, string.sub(img_name,1,-5)) 
       target_per_sample = {}
-      table.insert(target_per_sample, {xmin, ymin, xmax, ymax})
+      table.insert(target_per_sample, {xmin, ymin, xmax, ymax, w, h})
       goto next_sample
     end
     
     --for k, v in ipairs(name) do
       if string.sub(img_name,1,-5) == name[#name] then
-        table.insert(target_per_sample, {xmin, ymin, xmax, ymax})
+        table.insert(target_per_sample, {xmin, ymin, xmax, ymax, w, h})
       else
         --print(string.sub(img_name,1,-5))
         table.insert(name, string.sub(img_name,1,-5))    
         table.insert(target, target_per_sample)        
         target_per_sample = {}
-        table.insert(target_per_sample, {xmin, ymin, xmax, ymax})
+        table.insert(target_per_sample, {xmin, ymin, xmax, ymax, w, h})
       end
     --end
     if fid == len then
@@ -107,25 +107,34 @@ function load_data_save4ssd(mode)
   return target, name
 
 end
+-- 12880
+-- 12861
 -- train 
+
 Target_path = "./wider_face/wider_face_train_target_ssd.t7"
 Name_path   = "./wider_face/wider_face_train_name_ssd.t7"
 save_dir    = "./wider_face_train/"
+--[===[
 target, name = load_data_save4ssd("train")
 
+--]===]
+
 -- val 3226
+-- val 3217
 --[===[
 Target_path = "./wider_face/wider_face_val_target_ssd.t7"
 Name_path   = "./wider_face/wider_face_val_name_ssd.t7"
 save_dir    = "./wider_face_val/"
-target, name = load_data_save4ssd("val")
---]===]
 
+target, name = load_data_save4ssd("val")
+
+--]===]
+--[===[
 print("data label:"..#target)
 print("data names:"..#name)
 torch.save(Target_path, target)
 torch.save(Name_path, name)
---[===[
+
 --]===]
 target = torch.load(Target_path)
 name   = torch.load(Name_path)
@@ -145,9 +154,11 @@ for i = 1, #target do
     local x1 = target[i][j][1]
     local y1 = target[i][j][2]
     local x2 = target[i][j][3]
-    local y2 = target[i][j][4] 
+    local y2 = target[i][j][4]
+    local w  = target[i][j][5]
+    local h  = target[i][j][6]  
     --print(x1 .. " " .. y1 .. " " .. x2 .. " " .. y2)           
-    fp:write(tostring(x1) .. " " .. tostring(y1) .. " " .. tostring(x2) .. " " .. tostring(y2) .. "\n")
+    fp:write(tostring(x1) .. " " .. tostring(y1) .. " " .. tostring(x2) .. " " .. tostring(y2) .. " " .. tostring(w) .." " .. tostring(h) .. "\n")
   end
   fp:close()
 end
