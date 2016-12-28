@@ -1,4 +1,5 @@
-# ssd-for-torch
+# ssd_torch
+This is an implementation of "SSD: Single Shot MultiBox Detector" (arxiv 2016) in torch
 thanks for [mks0601](https://github.com/mks0601/SSD-Single-Shot-MultiBox-Detector) code and now this code is not finished. 
 I modify this code for two aspects:
 - 1. modify dataset loader on VOC0712 trainval, VOC2007 trainval and VOC2012 trainval.
